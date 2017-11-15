@@ -2,7 +2,7 @@
 This is about how to write sensor readings in to  a csv in desired manner. The waveSence_data_gen_app folder contains the python script to record examples with the ground truth geneated by LeapMotion along with leapMotion API.
 
 ## 1. Instruction for Running app
-**note:** *Insturctions were given for properly setuped LeapMotion SDK V2. For setting ud SDK see the instruction below*
+**note:** *Insturctions were given for properly setuped LeapMotion SDK V2. For setting ud SDK see the instruction below in Sect. 2.*
 go to the directory waveSence_data_gen_app
 
 ### **1.1 check the serial connection is working properly**
@@ -38,6 +38,42 @@ When the Leap Daemon is properly working, By clicking the option: **Diognistic V
 
 run the script simply by,
 ``` sudo  LD_PRELOAD=./libLeap.so python2.7 WaveSence.py ```
-**note:** The version of the *libLeap.so* SDK is from the version (2.3.1+31549). Incase of different version use relevent SDK files for ***Leap.py, Leap.pyc, LeapPython.so, libLeap.so***
 
+**note:** The version of the *libLeap.so* SDK is from the version (2.3.1+31549). In case of different version use relevent SDK files for ***Leap.py, Leap.pyc, LeapPython.so, libLeap.so***
 
+## 2.leapMotion SDK 
+### 2.1 Installation on Ubuntu
+**note:** LeapMotion SDK supports python 2.7. 
+1. Download LeapMotion SDK 2.3.1 from ```https://developer.leapmotion.com/sdk/v2/```
+2. Extract the with ```tar -xaf LeapDeveloperKit*33747*.tgz```
+3. ```cd LeapDeveloperKit*33747*```
+4. ```sudo dpkg -i Leap*x64.deb```
+
+### 2.1 using SDK with python 2.7 + testing 
+>The Leapmotion SDK 2.3.1-33747 is not properly working on ubuntu. Therefore use the SDK of LeapDeveloperKit 2.3.1-31549 instead if SDK of LeapDeveloperKit 2.3.1-33747.
+
+5. Download LeapDeveloperKit 2.3.1-31549 form ```https://developer-archive.leapmotion.com/downloads/external/skeletal-beta/linux?version=2.3.1.31549```
+6. ```tar -xaf LeapDeveloperKit*31549*.tgz```
+7. ```cd LeapDeveloperKit*31549*/LeapSDK```
+8. ```sudo apt-get install swig g++ libpython2.7-dev```
+9. ```cp include/Leap.i include/LeapNEW.i``` and Edit ```include/LeapNEW.i``` and replace every ```%}}``` by ```}}```
+10. ```swig -c++ -python -o /tmp/LeapPython.cpp -interface LeapPython include/LeapNEW.i```
+
+**testing the SDK**
+
+11. ```mkdir python2.7_project```
+12. ```cp -a lib/x64/libLeap.so lib/Leap.py samples/Sample.py python2.7_project/```
+13. ```g++ -fPIC -I/usr/include/python2.7 -I./include /tmp/LeapPython.cpp lib/x64/libLeap.so -shared -o python2.7_project/LeapPython.so```
+14. ```cd python2.7_project/```
+15. ```LD_PRELOAD=./libLeap.so python2.7 Sample.py```
+
+### 2.2 using SDK with python 3.5 + testing 
+steps 5-10 are same as for python 2.7
+
+11. ```sudo apt-get install libpython3.5-dev```
+12. ```mkdir python3.5_project```
+13. ```cp -a lib/x64/libLeap.so lib/Leap.py samples/Sample.py python3.5_project/```
+14. ```2to3-3.5 -nw python3.5_project/Sample.py```
+15.  ```g++ -fPIC -I/usr/include/python3.5m -I./include /tmp/LeapPython.cpp lib/x64/libLeap.so -shared -o python3.5_project/LeapPython.so```
+16. ```cd python3.5_project/```
+17. ```LD_PRELOAD=./libLeap.so python3.5 Sample.py```
