@@ -227,7 +227,7 @@ if __name__ == "__main__":
     print "working script path: " + path +'\n' 
     try:
         print "opening Serial port"
-        with serial.Serial('/dev/ttyUSB2',115200,timeout=1) as ser:
+        with serial.Serial('/dev/ttyUSB0',115200,timeout=1) as ser:
             print "opened"
             main()
             
